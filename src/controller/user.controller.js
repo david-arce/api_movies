@@ -1,4 +1,5 @@
 import prisma from "../db/prisma.js"
+import bcrypt from "bcrypt";
 
 export const getAllUsers = async (req, res) => {
     const data = await prisma.user.findMany();
@@ -17,13 +18,16 @@ export const getUserById = async (req, res) => {
 }
 
 export const createUser = async (req, res) => {
-    const {name, email, password, lastName} = req.body;
+    const {name, email, password, lastName, rol} = req.body;
+    
+    const hash = await bcrypt.hash(password, 10);
     const data = await prisma.user.create({
         data: {
             name,
             email,
-            password,
-            lastName
+            password: hash,
+            lastName,
+            rol
         }
     });
     res.json(data);
@@ -31,7 +35,7 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     const id = req.params.id;
-    const {name, email, password, lastName} = req.body;
+    const {name, email, password, lastName, rol} = req.body;
     const data = await prisma.user.update({
         where: {
             id
@@ -40,7 +44,8 @@ export const updateUser = async (req, res) => {
             name,
             email,
             password,
-            lastName
+            lastName,
+            rol
         }
     });
     res.send('User updated successfully!');

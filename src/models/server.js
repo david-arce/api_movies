@@ -2,6 +2,7 @@ import express from 'express';
 import {config} from 'dotenv';
 import morgan from 'morgan';
 import { router as userRouter } from '../routes/user.routes.js';
+import { router as authRouter} from '../routes/auth.routes.js';
 
 config();
 
@@ -19,7 +20,8 @@ export class Server {
     }
 
     routes(){
-        this.app.use('/users', userRouter)
+        this.app.use('/users', userRouter);
+        this.app.use('/auth', authRouter);
     }
 
     listen(){
